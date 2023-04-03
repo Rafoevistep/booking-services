@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\User\UserController;
+use App\Http\Controllers\Services\ServiceBookingController;
 use App\Http\Controllers\Services\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,15 +32,25 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'auth'], function ($ro
     Route::post('services', [ServiceController::class, 'store']);
     Route::put('services/{id}', [ServiceController::class, 'update']);
     Route::delete('services/{id}', [ServiceController::class, 'destroy']);
+    //Writer can view booked services
+    Route::get('booking',[ServiceBookingController::class, 'index']);
+    Route::get('booking/{id}',[ServiceBookingController::class , 'show']);
 });
 
 
 Route::group(['middleware' => ['admin','auth:sanctum']], function () {
     Route::post('user' , [UserController::class , 'store']);
     Route::delete('user/{id}', [UserController::class,'destroy' ]);
+    //admin can delete booked services
+    Route::delete('/booking/{id}', [ServiceBookingController::class, 'destroy']);
 });
 
 //Routes For not auth users
 Route::post('login', [AuthController::class, 'login']);
+
 Route::get('services', [ServiceController::class,'index']);
 Route::get('services/{id}', [ServiceController::class, 'show']);
+
+Route::post('booking/{id}',[ServiceBookingController::class, 'store']);
+Route::get('booking/search/{booking}',[ServiceBookingController::class,'search']);
+

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Services;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Services\StoreServiceRequest;
-use App\Http\Requests\Services\UpdateServiceRequest;
+use App\Http\Requests\Services\StoreRequest;
+use App\Http\Requests\Services\UpdateRequest;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
@@ -25,13 +25,14 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreServiceRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResponse
     {
         $imageName = Str::random(32) . "." . $request->image->getClientOriginalExtension();
 
         $service = Service::create([
             'name' => $request->name,
             'description' => $request->description,
+            'price' => $request->price,
             'image' => $imageName
         ]);
 
@@ -54,13 +55,14 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateServiceRequest $request, string $id): JsonResponse
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $service = Service::find($id);
 
         $service->update([
             'name' => $request->name,
             'description' => $request->description,
+            'price' => $request->price,
         ]);
 
         if ($request->image) {

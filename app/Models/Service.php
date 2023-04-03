@@ -17,6 +17,13 @@ class Service extends Model
     protected $fillable = [
         'name',
         'description',
+        'price',
         'image',
     ];
+
+    public function bookings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ServiceBooking::class);
+    }
+
 }
